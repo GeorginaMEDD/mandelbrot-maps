@@ -9,6 +9,8 @@ import WebGLCanvas from "./WebGLCanvas";
 import { genericTouchBind } from "./utils";
 import { Card } from "@material-ui/core";
 
+// TEST
+
 export default function MandelbrotRenderer(props) {
 
   // variables to hold canvas and webgl information
