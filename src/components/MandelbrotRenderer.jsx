@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import _ from 'lodash';
 
-import { useGesture } from "react-use-gesture";
-import { animated } from "react-spring";
+import { useGesture } from "react-use-gesture"; // Again stuff for users https://www.npmjs.com/package/react-use-gesture
+import { animated } from "react-spring"; //Does the nice fading thing when you click on buttons https://www.react-spring.io/docs/hooks/examples
 
 import newSmoothMandelbrotShader from "../shaders/newSmoothMandelbrotShader";
 import WebGLCanvas from "./WebGLCanvas";
 import { genericTouchBind } from "./utils";
 import { Card } from "@material-ui/core";
+import {ControlPointIcon} from "@material-ui/icons/ControlPoint";
 
 // TEST
 
@@ -38,13 +39,18 @@ export default function MandelbrotRenderer(props) {
   const maxI = props.maxiter;
   const AA = props.aa ? 2 : 1;
 
+  // Links this w newSmoothMandelbrotShader
   const fragShader = newSmoothMandelbrotShader({
-    maxI: maxI,
+    maxI: maxI,    // newSmoothMandelbrotShader's maxI = mandelbrotRenderer maxI and so on and so fourth
     AA: AA,
   }, {
-    stroke: props.crosshair ? 2 : 0,
+    // if props.crosshair then return 2 else return 0
+    stroke: props.crosshair ? 2 : 0, 
     radius: props.crosshair ? 100 : 0,
-  });
+  }, 
+  props.enablemPoint,  //{} = object you're making a copy o the shader w a copy of whatever prop.enablemPoint
+  // value of prop.enablempoint feeds back into the newsmooth......js
+  );
   const miniFragShader = newSmoothMandelbrotShader({
     maxI: maxI,
     AA: 2, 
@@ -70,6 +76,8 @@ export default function MandelbrotRenderer(props) {
   useEffect(touchBind, [touchBind]);  
 
   const [fps, setFps] = useState(0);
+
+  // Georgie
 
   return (
     <div className="renderer" style={{

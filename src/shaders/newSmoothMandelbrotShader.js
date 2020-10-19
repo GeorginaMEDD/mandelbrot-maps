@@ -1,14 +1,17 @@
 // TODO set max iterations as parameter, crosshair as parameter
 
+// WebGL 
+
 const newSmoothMandelbrotShader = ({
         maxI = 300, 
         AA = 1, 
         B = 64
     },
     crosshair = {
-        stroke: 2, 
+        stroke: 2, // Parameters; stroke = width 
         radius: 100, 
-    }
+    },
+    square = true,
 ) => `
 // Adapted by Joao Maio/2019, based on work by inigo quilez - iq/2013
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
@@ -25,6 +28,12 @@ const newSmoothMandelbrotShader = ({
 #define cross_stroke ${crosshair.stroke.toFixed(1)}
 #define cross_radius ${crosshair.radius.toFixed(1)}
 
+#define true 1 // this is read into after taking in sqaure = true  - webgl is top down
+#define false 0
+// square parameters
+#define square ${square} //whereever the square var is, replace it w true; so ${square} corresponds to const newSmoothMandelbrotShader
+// first square is used in function below, and so this definintion links it up w ${square} above
+
 // set high float precision (lower than this may break colours on mobile)
 precision highp float;
 
@@ -38,14 +47,20 @@ uniform float u_zoom;
 uniform float u_theta;
 
 bool crosshair( float x, float y ) {
-    float abs_x = abs(2.0*x - resolution.x);
+    float abs_x = abs(2.0*x - resolution.x); //normalisation
     float abs_y = abs(2.0*y - resolution.y);
 
+    //Going across each col and each row then decide on
     return 
     // crosshair in centre of screen
     (abs_x <= cross_stroke || abs_y <= cross_stroke) &&
     // crosshair size / "radius"
     (abs_x <= cross_radius && abs_y <= cross_radius);
+}
+
+// Georgie
+bool squareBool(float x, float y){
+    return ((x > -2.0001) && (x < -1.9999) &&(y > -0.0001) && (y < 0.0001));
 }
 
 float mandelbrot( in vec2 c ) {
@@ -71,6 +86,14 @@ float mandelbrot( in vec2 c ) {
     
     // optimized smooth interation count
     l = l - log2(log2(dot(z,z))) + 4.0;
+
+    // if ((c.x > -2.001) && (c.x < -1.999) &&(c.y > -0.001) && (c.y < 0.001))return 0.0;
+
+    // if you've toggled it on, and if this should be part of the square then 
+    #if square
+     if (squareBool(c.x,c.y)) return 0.0; //does the actual colouring
+    #endif
+
 
     return l;
 }
