@@ -3,7 +3,8 @@
 const newSmoothMandelbrotShader = ({
         maxI = 300, 
         AA = 1, 
-        B = 64
+        B = 64, 
+        mPoint = 1,
     },
     crosshair = {
         stroke: 2, 
@@ -20,6 +21,7 @@ const newSmoothMandelbrotShader = ({
 #define AA ${AA}
 #define MAXI ${maxI}
 #define B ${B.toFixed(1)}
+#define mPoint ${mPoint}
 
 // crosshair parameters
 #define cross_stroke ${crosshair.stroke.toFixed(1)}
@@ -49,6 +51,17 @@ bool crosshair( float x, float y ) {
 }
 
 float mandelbrot( in vec2 c ) {
+
+    vec2 m1 = vec2(-2.0, 0.0);
+    vec2 m2 = vec2(0.0, -1.0);
+
+    float c1 = (c.x - m1.x)*(c.x - m1.x) + (c.y - m1.y)*(c.y - m1.y);
+    float c2 = (c.x - m2.x)*(c.x - m2.x) + (c.y - m2.y)*(c.y - m2.y);
+
+    if (mPoint == 1 && c1 < 0.01 && c1 > 0.005) return 0.0;
+    if (mPoint == 1 && c2 < 0.01 && c2 > 0.005) return 0.0;
+
+
     {
         float c2 = dot(c, c);
         // skip computation inside M1 - http://iquilezles.org/www/articles/mset_1bulb/mset1bulb.htm
