@@ -43,10 +43,12 @@ export default function MandelbrotRenderer(props) {
   const fragShader = newSmoothMandelbrotShader({
     maxI: maxI,    // newSmoothMandelbrotShader's maxI = mandelbrotRenderer maxI and so on and so fourth
     AA: AA,
+    // M: props.enablemPoint ? 1 : 0,
   }, {
     // if props.crosshair then return 2 else return 0
     stroke: props.crosshair ? 2 : 0, 
     radius: props.crosshair ? 100 : 0,
+  // } 
   }, 
   props.enablemPoint,  //{} = object you're making a copy o the shader w a copy of whatever prop.enablemPoint
   // value of prop.enablempoint feeds back into the newsmooth......js

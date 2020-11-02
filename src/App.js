@@ -147,7 +147,7 @@ function App() {
         />
       },
       mPoint: {
-        name: 'An M-Point', 
+        name: 'M-Point', 
         ctrl: <Switch 
           color="primary"
           checked={controls.mPoint[0]} 
